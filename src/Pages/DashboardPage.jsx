@@ -1,4 +1,6 @@
+
 // src/Pages/DashboardPage.jsx
+
 import React, { useState, useEffect } from 'react';
 import LeaveForm from '../components/LeaveForm';
 import LeaveHistory from '../components/LeaveHistory';
@@ -7,12 +9,15 @@ import Navbar from '../components/NavBar';
 import Footer from '../components/Footer';
 import LeaveBalance from '../components/LeaveBalance';
 
+
 import { db } from '../services/firebase';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
+
 function Dashboard() {
   const user = localStorage.getItem('user') || 'User';
   const [leaves, setLeaves] = useState([]);
   const MAX_LEAVES = 10;
+
 
   // PEHLE — sirf ek baar load hota tha
 useEffect(() => {
@@ -48,6 +53,21 @@ useEffect(() => {
     const updated = await getLeaveHistory(user);
     setLeaves(updated);
     return docRef; // ← important!
+
+  // Load leaves on mount
+  useEffect(() => {
+    const fetchLeaves = async () => {
+      const data = await getLeaveHistory(user); // sirf is user ki leaves
+      setLeaves(data);
+    };
+    fetchLeaves();
+  }, []);
+
+  const handleNewLeave = async (newLeave) => {
+    await saveLeave(newLeave);
+    const updated = await getLeaveHistory(user);
+    setLeaves(updated);
+
   };
 
   const handleStatusChange = async (id, status) => {
@@ -93,4 +113,7 @@ useEffect(() => {
   );
 }
 
+
 export default Dashboard;
+
+

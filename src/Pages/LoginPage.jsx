@@ -1,4 +1,6 @@
+
 // src/Pages/LoginPage.jsx
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../assets/ChatGPT Image Apr 21, 2026, 11_20_03 PM.png";
@@ -7,13 +9,24 @@ import { motion } from "framer-motion";
 import { auth } from "../services/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
+
 const ADMIN_EMAIL = "admin@leave.com";
+
+// Admin ka email/password Firebase Authentication mein set karna hoga
+const ADMIN_EMAIL = "admin@leave.com"; // apna admin email daalo
 
 function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
   const [loading,  setLoading]  = useState(false);
   const navigate = useNavigate();
+
+
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  // User Login
 
   const handleUserLogin = async (e) => {
     e.preventDefault();
@@ -23,11 +36,18 @@ function LoginPage() {
     }
     setLoading(true);
     try {
+
       const email = `${username.trim()}@leave.com`;
       await signInWithEmailAndPassword(auth, email, password);
       // Save both user and email to localStorage for magic link
       localStorage.setItem("user",  username.trim());
       localStorage.setItem("email", `${username.trim()}@leave.com`);
+
+      // username ko email format mein convert karo
+      const email = `${username.trim()}@leave.com`;
+      await signInWithEmailAndPassword(auth, email, password);
+      localStorage.setItem("user", username.trim());
+
       toast.success(`Welcome, ${username}!`);
       setTimeout(() => navigate("/dashboard"), 1000);
     } catch (err) {
@@ -35,6 +55,9 @@ function LoginPage() {
     }
     setLoading(false);
   };
+
+
+  // Admin Login
 
   const handleAdminLogin = async () => {
     if (!username.trim() || !password.trim()) {
@@ -55,8 +78,18 @@ function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-black via-[#3b0000] to-red-700">
+
       <motion.div initial={{ opacity: 0, y: 80 }} whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }} viewport={{ once: true }} className="w-full max-w-lg">
+
+      <motion.div
+        initial={{ opacity: 0, y: 80 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+        viewport={{ once: true }}
+        className="w-full max-w-lg"
+      >
+
         <div className="flex justify-center mb-6">
           <img src={Logo} alt="logo" className="w-24 h-24 rounded-3xl bg-white p-2 shadow-2xl border border-white/30 hover:scale-105 transition duration-300" />
         </div>
