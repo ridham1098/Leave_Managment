@@ -10,7 +10,6 @@ import { auth } from "../services/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 
-const ADMIN_EMAIL = "admin@leave.com";
 
 // Admin ka email/password Firebase Authentication mein set karna hoga
 const ADMIN_EMAIL = "admin@leave.com"; // apna admin email daalo
@@ -23,8 +22,7 @@ function LoginPage() {
   const navigate = useNavigate();
 
 
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+
 
   // User Login
 
@@ -37,7 +35,7 @@ function LoginPage() {
     setLoading(true);
     try {
 
-      const email = `${username.trim()}@leave.com`;
+      
       await signInWithEmailAndPassword(auth, email, password);
       // Save both user and email to localStorage for magic link
       localStorage.setItem("user",  username.trim());
