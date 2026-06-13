@@ -71,7 +71,7 @@ export async function sendLeaveRequestEmail(leaveData, token) {
 
   try {
     // Using Vite proxy — /api/resend → https://api.resend.com
-    const res = await fetch('/api/resend/emails', {
+   const res = await fetch('https://api.resend.com/emails', {
       method:  'POST',
       headers: {
         'Content-Type':  'application/json',
@@ -141,7 +141,7 @@ export async function sendStatusEmail(employeeEmail, employeeName, status, leave
 </html>`;
 
   try {
-    await fetch('/api/resend/emails', {
+    await fetch('https://api.resend.com/emails', {
       method:  'POST',
       headers: {
         'Content-Type':  'application/json',
