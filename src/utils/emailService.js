@@ -1,7 +1,7 @@
 // src/utils/emailService.js
 // Uses Vite proxy to avoid CORS — no backend needed!
 
-const RESEND_API_KEY = import.meta.env.VITE_RESEND_API_KEY;
+
 const HR_EMAIL       = import.meta.env.VITE_HR_EMAIL || 'hr@company.com';
 const BASE_URL       = import.meta.env.VITE_BASE_URL || 'http://localhost:5173';
 
@@ -69,32 +69,32 @@ export async function sendLeaveRequestEmail(leaveData, token) {
 </body>
 </html>`;
 
-  try {
-    // Using Vite proxy — /api/resend → https://api.resend.com
-   const res = await fetch('https://api.resend.com/emails', {
-      method:  'POST',
-      headers: {
-        'Content-Type':  'application/json',
-        'Authorization': `Bearer ${RESEND_API_KEY}`,
-      },
-      body: JSON.stringify({
-        from:    'Leave System <onboarding@resend.dev>',
-        to:      'ridhamkoundal04@gmail.com',
-        subject: `📋 Leave Request — ${leaveData.employeeName} (${leaveData.totalDays} days)`,
-        html:    emailHTML,
-      }),
-    });
+try {
+  const res = await fetch('/api/send-email', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: 'Leave System <onboarding@resend.dev>',
+      to: 'ridhamkoundal04@gmail.com',
+      subject: `📋 Leave Request — ${leaveData.employeeName} (${leaveData.totalDays} days)`,
+      html: emailHTML,
+    }),
+  });
 
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || 'Email failed');
-    console.log('✅ Email sent!', data);
-    return { success: true };
-  } catch (e) {
-    console.error('❌ Email error:', e);
-    return { success: false, error: e.message };
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.error || 'Email failed');
   }
-}
 
+  return { success: true };
+} catch (e) {
+  console.error('❌ Email error:', e);
+  return { success: false, error: e.message };
+}
+}
 export async function sendStatusEmail(employeeEmail, employeeName, status, leaveData, reason = '') {
   if (!employeeEmail) return;
   const isApproved = status === 'Approved';
@@ -139,22 +139,20 @@ export async function sendStatusEmail(employeeEmail, employeeName, status, leave
 </div>
 </body>
 </html>`;
-
-  try {
-    await fetch('https://api.resend.com/emails', {
-      method:  'POST',
-      headers: {
-        'Content-Type':  'application/json',
-        'Authorization': `Bearer ${RESEND_API_KEY}`,
-      },
-      body: JSON.stringify({
-        from:    'Leave System <onboarding@resend.dev>',
-        to:      [employeeEmail],
-        subject: `Your leave has been ${status} ${isApproved?'✅':'❌'}`,
-        html:    emailHTML,
-      }),
-    });
-  } catch (e) {
-    console.error('Status email error:', e);
-  }
+try {
+  await fetch('/api/send-email', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: 'Leave System <onboarding@resend.dev>',
+      to: [employeeEmail],
+      subject: `Your leave has been ${status} ${isApproved ? '✅' : '❌'}`,
+      html: emailHTML,
+    }),
+  });
+} catch (e) {
+  console.error('Status email error:', e);
+}
 }
