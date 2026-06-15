@@ -6,7 +6,7 @@ const HR_EMAIL       = import.meta.env.VITE_HR_EMAIL || 'hr@company.com';
 const BASE_URL       = import.meta.env.VITE_BASE_URL || 'http://localhost:5173';
 
 export async function sendLeaveRequestEmail(leaveData, token) {
-  const reviewLink = `${BASE_URL}/review?token=${token}`;
+  const reviewLink =  `${BASE_URL}/review?token=${token}`;
 
   const emailHTML = `
 <!DOCTYPE html>
